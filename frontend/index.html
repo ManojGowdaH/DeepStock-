@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Explore Indian stock history, candle patterns, and recent company news." />
+    <title>DeepStock | Indian Stock Analysis</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="DeepStock home"><span class="brand-mark">D</span><span>DeepStock</span></a>
+        <span id="backend-indicator" class="status-pill status-checking"><span class="status-dot"></span><span id="backend-status" role="status">Connecting</span></span>
+      </header>
+
+      <main>
+        <section class="hero">
+          <p class="eyebrow">Indian market research</p>
+          <h1>Understand a stock.<br /><span>Make your own decision.</span></h1>
+          <p class="hero-copy">Explore price history, candlestick patterns, and recent news in one simple report.</p>
+          <form id="search-form" class="search-form">
+            <label class="sr-only" for="stock-search">Search an Indian company or NSE symbol</label>
+            <div class="search-field-wrap">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input id="stock-search" type="search" placeholder="Search company or symbol (e.g. Reliance, INFY)" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="stock-suggestions" required />
+              <div id="stock-suggestions" class="suggestions" role="listbox" aria-label="Matching Indian stocks" hidden></div>
+            </div>
+            <button id="analyze-button" type="submit">Analyze stock <span aria-hidden="true">→</span></button>
+          </form>
+          <p id="catalogue-status" class="search-hint">Search the full NSE equity list by company name or symbol.</p>
+          <div id="search-error" class="inline-error" role="status" hidden></div>
+        </section>
+
+        <section id="analysis-view" class="analysis-view" hidden aria-live="polite">
+          <div class="stock-heading">
+            <div>
+              <p class="eyebrow">Stock analysis</p>
+              <h2 id="company-title">—</h2>
+              <p id="company-symbol" class="company-symbol"></p>
+            </div>
+            <div class="price-block"><strong id="latest-price">—</strong><span id="price-date">—</span></div>
+          </div>
+
+          <section class="report-card">
+            <div class="report-topline"><div><p class="eyebrow">Your report</p><h3 id="report-title">Analysis summary</h3></div><span id="timing-badge" class="timing-badge">Loading</span></div>
+            <p id="report-summary" class="report-summary">Loading price history and company news…</p>
+            <div class="report-highlights">
+              <div><span class="highlight-label">Trend snapshot</span><strong id="trend-snapshot">—</strong></div>
+              <div><span class="highlight-label">RSI (14)</span><strong id="rsi-value">—</strong></div>
+              <div><span class="highlight-label">Patterns found</span><strong id="pattern-count">—</strong></div>
+            </div>
+            <p id="report-disclaimer" class="disclaimer">This is informational analysis, not personalized financial advice. No tool can identify a guaranteed right time to buy or sell.</p>
+          </section>
+
+          <section class="content-card chart-card">
+            <div class="section-heading chart-heading"><div><p class="eyebrow">Price history</p><h3 id="chart-title">Daily candlesticks</h3><p class="quiet-label">Scroll or pinch to zoom · drag to move through history</p></div><span id="history-meta" class="quiet-label">—</span></div>
+            <div class="chart-controls" aria-label="Chart controls">
+              <div class="control-group range-controls" id="range-controls" aria-label="Visible history range">
+                <button class="chart-control" type="button" data-range="1d">1D</button>
+                <button class="chart-control is-active" type="button" data-range="1m">1M</button>
+                <button class="chart-control" type="button" data-range="3m">3M</button>
+                <button class="chart-control" type="button" data-range="6m">6M</button>
+                <button class="chart-control" type="button" data-range="1y">1Y</button>
+                <button class="chart-control" type="button" data-range="3y">3Y</button>
+                <button class="chart-control" type="button" data-range="5y">5Y</button>
+              </div>
+            </div>
+            <div id="chart-readout" class="chart-readout" aria-live="polite"></div>
+            <div id="stock-chart" class="chart-wrap" role="img" aria-label="Daily stock candlestick chart"></div>
+            <p class="source-note" id="price-source">Prices provided by Yahoo Finance and may be delayed.</p>
+          </section>
+
+          <div class="detail-grid">
+            <section class="content-card">
+              <div class="section-heading"><div><p class="eyebrow">Price action</p><h3>Candlestick patterns</h3></div></div>
+              <ul id="patterns-list" class="item-list"><li class="empty-state">Loading patterns…</li></ul>
+            </section>
+            <section class="content-card">
+              <div class="section-heading"><div><p class="eyebrow">What’s happening</p><h3>Recent news</h3></div></div>
+              <ul id="news-list" class="item-list"><li class="empty-state">Loading news…</li></ul>
+            </section>
+          </div>
+          <p class="footnote">Technical patterns and historical prices describe past market activity; they do not predict future returns. Verify information independently and consider your risk tolerance.</p>
+        </section>
+      </main>
+      <footer><span>DeepStock · Educational market research</span><span id="data-updated">—</span></footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
