@@ -1,4 +1,3 @@
-const BACKEND_URL = 'http://localhost:8000';
 const searchInput = document.getElementById('stock-search');
 const suggestionBox = document.getElementById('stock-suggestions');
 const searchError = document.getElementById('search-error');
@@ -19,12 +18,13 @@ let lastSuggestions = [];
 async function checkBackend() {
   const status = document.getElementById('backend-status');
   try {
-    const response = await fetch(`${BACKEND_URL}/health`);
-    if (!response.ok) throw new Error('Unavailable');
+    const response = await apiRequest('/health', { retries: 1 });
+    if (response && response.status !== 'ok') throw new ApiError('Backend unavailable');
     status.textContent = 'Market analysis ready';
     document.getElementById('backend-indicator').className = 'status-pill status-ready';
-  } catch {
-    status.textContent = 'Backend unavailable';
+  } catch (error) {
+    const message = error instanceof ApiError ? error.message : 'Backend unavailable';
+    status.textContent = message;
     document.getElementById('backend-indicator').className = 'status-pill status-error';
   }
 }
@@ -50,9 +50,7 @@ async function searchStocks(query) {
     const requestSequence = ++searchSequence;
     if (searchController) searchController.abort();
     searchController = new AbortController();
-    const response = await fetch(`${BACKEND_URL}/api/stocks?search=${encodeURIComponent(query.trim())}&limit=12`, { signal: searchController.signal });
-    if (!response.ok) throw new Error('Could not search companies right now.');
-    const data = await response.json();
+    const data = await apiRequest(`/api/stocks?search=${encodeURIComponent(query.trim())}&limit=12`, { retries: 1, signal: searchController.signal });
     if (requestSequence !== searchSequence) return;
     const normalizedQuery = query.trim().toLocaleLowerCase();
     lastSuggestions = (data.symbols || []).filter(stock =>
@@ -336,9 +334,7 @@ async function selectChartRange(range) {
   rangeButtons.forEach(button => { button.disabled = true; });
   historyMeta.textContent = 'Loading today’s intraday candles…';
   try {
-    const response = await fetch(`${BACKEND_URL}/api/stocks/${encodeURIComponent(currentAnalysisSymbol)}/live?interval=5m&period=1d`);
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.detail || 'Intraday candles are not available right now.');
+    const data = await apiRequest(`/api/stocks/${encodeURIComponent(currentAnalysisSymbol)}/live?interval=5m&period=1d`, { retries: 1 });
     if (!data.rows || !data.rows.length) throw new Error('No intraday candles are available yet for today.');
     selectedChartRange = '1d';
     renderChart(data.rows, { intraday: true });
@@ -363,10 +359,7 @@ async function analyzeStock(symbol) {
   document.getElementById('report-summary').textContent = 'Loading stock history, candle patterns, and recent news…';
   analysisView.scrollIntoView({ behavior: 'smooth', block: 'start' });
   try {
-    const response = await fetch(`${BACKEND_URL}/api/stocks/${encodeURIComponent(symbol)}/analysis?period=5y`);
-    const data = await response.json();
-    if (response.status === 502) throw new Error('Market history is unavailable for this stock from the data provider right now. The stock can still appear in the NSE list; please try again later.');
-    if (!response.ok) throw new Error(data.detail || 'Analysis could not be completed.');
+    const data = await apiRequest(`/api/stocks/${encodeURIComponent(symbol)}/analysis?period=5y`, { retries: 1 });
     renderAnalysis(data);
   } catch (error) {
     analysisView.hidden = true;

@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "deepstock-ai",
+  "framework": "other",
+  "buildCommand": "echo 'No build step required for this static frontend.'",
+  "outputDirectory": "."
+}
