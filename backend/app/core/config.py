@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parents[3] / ".env")
+load_dotenv(Path(__file__).resolve().parents[3] / ".env", override=True)
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./deepstock_ai.db")
@@ -19,7 +19,7 @@ CORS_ALLOW_ORIGINS = tuple(
     if origin.strip()
 )
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(10 * 1024 * 1024)))
-API_WRITE_KEY = os.getenv("API_WRITE_KEY", "").strip()
+
 
 MODEL_DIRS = {
     "ann": MODEL_STORAGE_PATH / "ann",
