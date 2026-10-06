@@ -21,5 +21,5 @@ docker run --rm -p 8000:8000 deepstock-backend
 ## Health check
 
 ```text
-http://localhost:8000/health
+https://deepstock-thtj.onrender.com/health
 ```

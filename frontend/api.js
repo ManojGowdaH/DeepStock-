@@ -1,8 +1,4 @@
-const API_BASE_URL =
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:8000'
-    : 'https://deepstock-thtj.onrender.com';
+const API_BASE_URL = 'https://deepstock-thtj.onrender.com';
 
 class ApiError extends Error {
   constructor(message, { status = 0, detail = '' } = {}) {
